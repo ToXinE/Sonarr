@@ -8,7 +8,6 @@ using NzbDrone.Core.Configuration;
 using NzbDrone.Core.Update;
 using NzbDrone.Core.Validation;
 using NzbDrone.Core.Validation.Paths;
-using Omu.ValueInjecter;
 
 namespace NzbDrone.Api.Config
 {
@@ -48,12 +47,10 @@ namespace NzbDrone.Api.Config
 
         private HostConfigResource GetHostConfig()
         {
-            var resource = new HostConfigResource();
-            resource.InjectFrom(_configFileProvider);
+            var resource = _configFileProvider.ToResource();
             resource.Id = 1;
 
             var user = _userService.FindUser();
-
             if (user != null)
             {
                 resource.Username = user.Username;

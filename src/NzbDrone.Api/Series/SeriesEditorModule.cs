@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Nancy;
 using NzbDrone.Api.Extensions;
-using NzbDrone.Api.Mapping;
 using NzbDrone.Core.Tv;
 
 namespace NzbDrone.Api.Series
@@ -20,10 +20,13 @@ namespace NzbDrone.Api.Series
         private Response SaveAll()
         {
             //Read from request
-            var series = Request.Body.FromJson<List<SeriesResource>>().InjectTo<List<Core.Tv.Series>>();
+            var resources = Request.Body.FromJson<List<SeriesResource>>();
+
+#warning TODO: Shouldn't we somehow handle which properties can be set instead of injecting all of it?
+            var series = resources.Select(SeriesResourceMapper.ToModel).ToList();
 
             return _seriesService.UpdateSeries(series)
-                                 .InjectTo<List<SeriesResource>>()
+                                 .ToResource()
                                  .AsResponse(HttpStatusCode.Accepted);
         }
     }

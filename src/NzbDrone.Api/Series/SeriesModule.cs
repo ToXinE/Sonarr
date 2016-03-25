@@ -10,7 +10,6 @@ using NzbDrone.Core.MediaFiles.Events;
 using NzbDrone.Core.Messaging.Events;
 using NzbDrone.Core.SeriesStats;
 using NzbDrone.Core.Tv;
-using NzbDrone.Api.Mapping;
 using NzbDrone.Core.Tv.Events;
 using NzbDrone.Core.Validation.Paths;
 using NzbDrone.Core.DataAugmentation.Scene;
@@ -84,14 +83,14 @@ namespace NzbDrone.Api.Series
         private SeriesResource GetSeries(int id)
         {
             var series = _seriesService.GetSeries(id);
-            return GetSeriesResource(series);
+            return MapToResource(series);
         }
 
-        private SeriesResource GetSeriesResource(Core.Tv.Series series)
+        private SeriesResource MapToResource(Core.Tv.Series series)
         {
             if (series == null) return null;
 
-            var resource = series.InjectTo<SeriesResource>();
+            var resource = series.ToResource();
             MapCoversToLocal(resource);
             FetchAndLinkSeriesStatistics(resource);
             PopulateAlternateTitles(resource);
@@ -102,7 +101,7 @@ namespace NzbDrone.Api.Series
         private List<SeriesResource> AllSeries()
         {
             var seriesStats = _seriesStatisticsService.SeriesStatistics();
-            var seriesResources = ToListResource(_seriesService.GetAllSeries);
+            var seriesResources = _seriesService.GetAllSeries().ToResource();
 
             MapCoversToLocal(seriesResources.ToArray());
             LinkSeriesStatistics(seriesResources, seriesStats);
@@ -113,14 +112,19 @@ namespace NzbDrone.Api.Series
 
         private int AddSeries(SeriesResource seriesResource)
         {
-            var series = _seriesService.AddSeries(seriesResource.InjectTo<Core.Tv.Series>());
+            var model = seriesResource.ToModel();
 
-            return series.Id;
+#warning TODO: Fetch from skyhook in the service before creating? (In AddSeries)
+
+            return _seriesService.AddSeries(model).Id;
         }
 
         private void UpdateSeries(SeriesResource seriesResource)
         {
-            GetNewId<Core.Tv.Series>(_seriesService.UpdateSeries, seriesResource);
+#warning TODO: How to do this atomically?
+            var model = seriesResource.ToModel(_seriesService.GetSeries(seriesResource.Id));
+
+            _seriesService.UpdateSeries(model);
 
             BroadcastResourceChange(ModelAction.Updated, seriesResource);
         }
@@ -175,7 +179,7 @@ namespace NzbDrone.Api.Series
             {
                foreach (var season in resource.Seasons)
                 {
-                    season.Statistics = seriesStatistics.SeasonStatistics.SingleOrDefault(s => s.SeasonNumber == season.SeasonNumber).InjectTo<SeasonStatisticsResource>();
+                    season.Statistics = SeasonStatisticsResourceMapper.ToResource(seriesStatistics.SeasonStatistics.SingleOrDefault(s => s.SeasonNumber == season.SeasonNumber));
                 }
             }
         }
@@ -194,7 +198,7 @@ namespace NzbDrone.Api.Series
 
             if (mappings == null) return;
 
-            resource.AlternateTitles = mappings.InjectTo<List<AlternateTitleResource>>();
+            resource.AlternateTitles = mappings.Select(v => new AlternateTitleResource { Title = v.Title, SeasonNumber = v.SeasonNumber, SceneSeasonNumber = v.SceneSeasonNumber }).ToList();
         }
 
         public void Handle(EpisodeImportedEvent message)
@@ -221,7 +225,8 @@ namespace NzbDrone.Api.Series
 
         public void Handle(SeriesDeletedEvent message)
         {
-            BroadcastResourceChange(ModelAction.Deleted, message.Series.InjectTo<SeriesResource>());
+#warning TODO: Why do we send the resource along with the deletion?
+            BroadcastResourceChange(ModelAction.Deleted, message.Series.ToResource());
         }
 
         public void Handle(SeriesRenamedEvent message)

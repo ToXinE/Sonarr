@@ -1,4 +1,5 @@
-﻿using NzbDrone.Core.Metadata;
+﻿using System;
+using NzbDrone.Core.Metadata;
 
 namespace NzbDrone.Api.Metadata
 {
@@ -7,6 +8,16 @@ namespace NzbDrone.Api.Metadata
         public MetadataModule(IMetadataFactory metadataFactory)
             : base(metadataFactory, "metadata")
         {
+        }
+
+        protected override void MapToResource(MetadataResource resource, MetadataDefinition definition)
+        {
+            base.MapToResource(resource, definition);
+        }
+
+        protected override void MapToModel(MetadataDefinition definition, MetadataResource resource)
+        {
+            base.MapToModel(definition, resource);
         }
 
         protected override void Validate(MetadataDefinition definition, bool includeWarnings)

@@ -40,7 +40,7 @@ namespace NzbDrone.Api.Wanted
                 pagingSpec.FilterExpression = v => v.Monitored == true && v.Series.Monitored == true;
             }
 
-            PagingResource<EpisodeResource> resource = ApplyToPage(_episodeCutoffService.EpisodesWhereCutoffUnmet, pagingSpec);
+            PagingResource<EpisodeResource> resource = ApplyToPage(_episodeCutoffService.EpisodesWhereCutoffUnmet, pagingSpec, EpisodeResourceMapper.ToResource);
 
             return resource;
         }

@@ -5,10 +5,10 @@ using NzbDrone.Api.Series;
 using System.Linq;
 using NzbDrone.Test.Common;
 
-namespace NzbDrone.Integration.Test
+namespace NzbDrone.Integration.Test.ApiTests
 {
     [TestFixture]
-    public class SeriesIntegrationTest : IntegrationTest
+    public class SeriesFixture : IntegrationTest
     {
         [Test]
         public void series_lookup_on_tvdb()

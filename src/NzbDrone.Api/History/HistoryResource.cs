@@ -17,7 +17,9 @@ namespace NzbDrone.Api.History
         public QualityModel Quality { get; set; }
         public bool QualityCutoffNotMet { get; set; }
         public DateTime Date { get; set; }
+#warning FIXME: Not used?
         public string Indexer { get; set; }
+#warning FIXME: Not used?
         public string ReleaseGroup { get; set; }
         public string DownloadId { get; set; }
 
@@ -27,5 +29,34 @@ namespace NzbDrone.Api.History
 
         public EpisodeResource Episode { get; set; }
         public SeriesResource Series { get; set; }
+    }
+
+    public static class HistoryResourceMapper
+    {
+        public static HistoryResource ToResource(this Core.History.History model)
+        {
+            if (model == null) return null;
+
+            return new HistoryResource
+            {
+                Id = model.Id,
+
+                EpisodeId = model.EpisodeId,
+                SeriesId = model.SeriesId,
+                SourceTitle = model.SourceTitle,
+                Quality = model.Quality,
+                //QualityCutoffNotMet
+                Date = model.Date,
+                //Indexer
+                //ReleaseGroup
+                DownloadId = model.DownloadId,
+
+                EventType = model.EventType,
+
+                Data  = model.Data
+                //Episode
+                //Series
+            };
+        }
     }
 }

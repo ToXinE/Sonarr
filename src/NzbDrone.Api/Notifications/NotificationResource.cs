@@ -4,6 +4,7 @@ namespace NzbDrone.Api.Notifications
 {
     public class NotificationResource : ProviderResource
     {
+#warning FIXME: Unused.
         public string Link { get; set; }
         public bool OnGrab { get; set; }
         public bool OnDownload { get; set; }
@@ -13,6 +14,7 @@ namespace NzbDrone.Api.Notifications
         public bool SupportsOnDownload { get; set; }
         public bool SupportsOnUpgrade { get; set; }
         public bool SupportsOnRename { get; set; }
+#warning FIXME: Unused.
         public string TestCommand { get; set; }
         public HashSet<int> Tags { get; set; }
     }
