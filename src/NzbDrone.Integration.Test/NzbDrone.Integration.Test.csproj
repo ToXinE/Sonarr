@@ -105,7 +105,7 @@
   <ItemGroup>
     <Compile Include="ApiTests\CalendarFixture.cs" />
     <Compile Include="ApiTests\BlacklistFixture.cs" />
-    <Compile Include="ApiTests\DownloadClientConfigFixture.cs" />
+    <Compile Include="ApiTests\DownloadClientFixture.cs" />
     <Compile Include="Client\ClientBase.cs" />
     <Compile Include="Client\EpisodeClient.cs" />
     <Compile Include="Client\IndexerClient.cs" />
