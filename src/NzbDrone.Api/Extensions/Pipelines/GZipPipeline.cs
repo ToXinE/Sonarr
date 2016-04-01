@@ -45,12 +45,17 @@ namespace NzbDrone.Api.Extensions.Pipelines
                     }
                     else
                     {
+                        var gzippedData = new MemoryStream();                        
+                        var gzip = new GZipStream(gzippedData, CompressionMode.Compress, true);
+                        data.CopyTo(gzip);
+                        gzip.Close();
+                        gzippedData.Position = 0;
+
                         response.Headers["Content-Encoding"] = "gzip";
-                        response.Contents = s =>
+                        response.Contents = stream =>
                         {
-                            var gzip = new GZipStream(s, CompressionMode.Compress, true);
-                            data.CopyTo(gzip);
-                            gzip.Close();
+                            gzippedData.CopyTo(stream);
+                            stream.Flush();
                         };
                     }
                 }
