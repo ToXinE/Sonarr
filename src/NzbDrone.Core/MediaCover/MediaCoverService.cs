@@ -66,15 +66,9 @@ namespace NzbDrone.Core.MediaCover
         {
             foreach (var mediaCover in covers)
             {
-                var filePath = GetCoverPath(seriesId, mediaCover.CoverType);
+                var cachebreak = Path.GetFileNameWithoutExtension(mediaCover.Url);
 
-                mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + seriesId + "/" + mediaCover.CoverType.ToString().ToLower() + ".jpg";
-
-                if (_diskProvider.FileExists(filePath))
-                {
-                    var lastWrite = _diskProvider.FileGetLastWrite(filePath);
-                    mediaCover.Url += "?lastWrite=" + lastWrite.Ticks;
-                }
+                mediaCover.Url = _configFileProvider.UrlBase + @"/MediaCover/" + seriesId + "/" + mediaCover.CoverType.ToString().ToLower() + ".jpg?cb=" + cachebreak;
             }
         }
 

@@ -36,34 +36,12 @@ namespace NzbDrone.Core.Test.MediaCoverTests
         {
             var covers = new List<MediaCover.MediaCover>
                 {
-                    new MediaCover.MediaCover {CoverType = MediaCoverTypes.Banner}
+                    new MediaCover.MediaCover { CoverType = MediaCoverTypes.Banner, Url = "http://mysite/banner/1234-1.jpg" }
                 };
-
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.FileGetLastWrite(It.IsAny<string>()))
-                  .Returns(new DateTime(1234));
-
-            Mocker.GetMock<IDiskProvider>().Setup(c => c.FileExists(It.IsAny<string>()))
-                  .Returns(true);
-
+            
             Subject.ConvertToLocalUrls(12, covers);
 
-
-            covers.Single().Url.Should().Be("/MediaCover/12/banner.jpg?lastWrite=1234");
-        }
-
-        [Test]
-        public void should_convert_media_urls_to_local_without_time_if_file_doesnt_exist()
-        {
-            var covers = new List<MediaCover.MediaCover>
-                {
-                    new MediaCover.MediaCover {CoverType = MediaCoverTypes.Banner}
-                };
-
-
-            Subject.ConvertToLocalUrls(12, covers);
-
-
-            covers.Single().Url.Should().Be("/MediaCover/12/banner.jpg");
+            covers.Single().Url.Should().Be("/MediaCover/12/banner.jpg?cb=1234-1");
         }
 
         [Test]
