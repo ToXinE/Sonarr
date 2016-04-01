@@ -157,9 +157,11 @@ namespace NzbDrone.Api.Series
 
         private void LinkSeriesStatistics(List<SeriesResource> resources, List<SeriesStatistics> seriesStatistics)
         {
+            var dictSeriesStats = seriesStatistics.ToDictionary(v => v.SeriesId);
+
             foreach (var series in resources)
             {
-                var stats = seriesStatistics.SingleOrDefault(ss => ss.SeriesId == series.Id);
+                var stats = dictSeriesStats.GetValueOrDefault(series.Id);
                 if (stats == null) continue;
 
                 LinkSeriesStatistics(series, stats);
@@ -177,9 +179,11 @@ namespace NzbDrone.Api.Series
 
             if (seriesStatistics.SeasonStatistics != null)
             {
-               foreach (var season in resource.Seasons)
+                var dictSeasonStats = seriesStatistics.SeasonStatistics.ToDictionary(v => v.SeasonNumber);
+
+                foreach (var season in resource.Seasons)
                 {
-                    season.Statistics = SeasonStatisticsResourceMapper.ToResource(seriesStatistics.SeasonStatistics.SingleOrDefault(s => s.SeasonNumber == season.SeasonNumber));
+                    season.Statistics = SeasonStatisticsResourceMapper.ToResource(dictSeasonStats.GetValueOrDefault(season.SeasonNumber));
                 }
             }
         }
