@@ -27,7 +27,7 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_be_able_to_get_episodes()
         {
-            _series = EnsureSeries("The Blacklist", true);
+            _series = EnsureSeries(266189, "The Blacklist", true);
 
             var request = Calendar.BuildRequest();
             request.AddParameter("start", new DateTime(2015, 10, 1).ToString("s") + "Z");
@@ -43,7 +43,7 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_not_be_able_to_get_unmonitored_episodes()
         {
-            _series = EnsureSeries("The Blacklist", false);
+            _series = EnsureSeries(266189, "The Blacklist", false);
 
             var request = Calendar.BuildRequest();
             request.AddParameter("start", new DateTime(2015, 10, 1).ToString("s") + "Z");
@@ -59,7 +59,7 @@ namespace NzbDrone.Integration.Test.ApiTests
         [Test]
         public void should_be_able_to_get_unmonitored_episodes()
         {
-            _series = EnsureSeries("The Blacklist", false);
+            _series = EnsureSeries(266189, "The Blacklist", false);
 
             var request = Calendar.BuildRequest();
             request.AddParameter("start", new DateTime(2015, 10, 1).ToString("s") + "Z");

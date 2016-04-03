@@ -14,10 +14,10 @@ namespace NzbDrone.Integration.Test.ApiTests
         private SeriesResource _series;
 
         [Test]
-        [Ignore]
+        [Ignore("Adding to blacklist not supported")]
         public void should_be_able_to_add_to_blacklist()
         {
-            _series = this.EnsureSeries("The Blacklist");
+            _series = EnsureSeries(266189, "The Blacklist");
 
             Blacklist.Post(new Api.Blacklist.BlacklistResource
             {
@@ -27,7 +27,7 @@ namespace NzbDrone.Integration.Test.ApiTests
         }
 
         [Test]
-        [Ignore]
+        [Ignore("Adding to blacklist not supported")]
         public void should_be_able_to_get_all_blacklisted()
         {
             var result = Blacklist.GetPaged(0, 1000, "date", "desc");
@@ -38,7 +38,7 @@ namespace NzbDrone.Integration.Test.ApiTests
         }
 
         [Test]
-        [Ignore]
+        [Ignore("Adding to blacklist not supported")]
         public void should_be_able_to_remove_from_blacklist()
         {
             Blacklist.Delete(1);

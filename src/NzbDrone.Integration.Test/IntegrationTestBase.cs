@@ -16,6 +16,7 @@ using NzbDrone.Api.Episodes;
 using NzbDrone.Api.History;
 using NzbDrone.Api.RootFolders;
 using NzbDrone.Api.Series;
+using NzbDrone.Api.Tags;
 using NzbDrone.Common.EnvironmentInfo;
 using NzbDrone.Common.Serializer;
 using NzbDrone.Integration.Test.Client;
@@ -42,6 +43,7 @@ namespace NzbDrone.Integration.Test
         public ReleaseClient Releases;
         public ClientBase<RootFolderResource> RootFolders;
         public SeriesClient Series;
+        public ClientBase<TagResource> Tags;
 
         private List<SignalRMessage> _signalRReceived;
         private Connection _signalrConnection;
@@ -103,6 +105,7 @@ namespace NzbDrone.Integration.Test
             Releases = new ReleaseClient(RestClient, ApiKey);
             RootFolders = new ClientBase<RootFolderResource>(RestClient, ApiKey);
             Series = new SeriesClient(RestClient, ApiKey);
+            Tags = new ClientBase<TagResource>(RestClient, ApiKey);
         }
 
         [OneTimeTearDown]
@@ -192,16 +195,16 @@ namespace NzbDrone.Integration.Test
             Assert.Fail("Timed on wait");
         }
 
-        public SeriesResource EnsureSeries(string seriesTitle, bool? monitored = null)
+        public SeriesResource EnsureSeries(int tvdbId, string seriesTitle, bool? monitored = null)
         {
-            var result = Series.All().FirstOrDefault(v => v.Title == seriesTitle);
+            var result = Series.All().FirstOrDefault(v => v.TvdbId == tvdbId);
 
             if (result == null)
             {
-                var lookup = Series.Lookup(seriesTitle);
+                var lookup = Series.Lookup("tvdb:" + tvdbId);
                 var series = lookup.First();
                 series.ProfileId = 1;
-                series.Path = Path.Combine(SeriesRootFolder, seriesTitle);
+                series.Path = Path.Combine(SeriesRootFolder, series.Title);
                 series.Monitored = true;
                 series.Seasons.ForEach(v => v.Monitored = true);
                 series.AddOptions = new Core.Tv.AddSeriesOptions();
@@ -237,6 +240,28 @@ namespace NzbDrone.Integration.Test
             }
 
             return result;
+        }
+
+        public void EnsureNoSeries(int tvdbId, string seriesTitle)
+        {
+            var result = Series.All().FirstOrDefault(v => v.TvdbId == tvdbId);
+
+            if (result != null)
+            {
+                Series.Delete(result.Id);
+            }
+        }
+
+        public TagResource EnsureTag(string tagLabel)
+        {
+            var tag = Tags.All().FirstOrDefault(v => v.Label == tagLabel);
+
+            if (tag == null)
+            {
+                tag = Tags.Post(new TagResource { Label = tagLabel });
+            }
+
+            return tag;
         }
     }
 }
