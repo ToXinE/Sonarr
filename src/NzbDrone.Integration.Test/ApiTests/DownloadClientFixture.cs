@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using NzbDrone.Api.DownloadClient;
+using NzbDrone.Test.Common;
 
 namespace NzbDrone.Integration.Test.ApiTests
 {
@@ -15,8 +15,8 @@ namespace NzbDrone.Integration.Test.ApiTests
 
             schema.Enable = true;
             schema.Name = "Test UsenetBlackhole";
-            schema.Fields.First(v => v.Name == "WatchFolder").Value = GetTestDirectory("Download", "UsenetBlackhole", "Watch");
-            schema.Fields.First(v => v.Name == "NzbFolder").Value = GetTestDirectory("Download", "UsenetBlackhole", "Nzb");
+            schema.Fields.First(v => v.Name == "WatchFolder").Value = GetTempDirectory("Download", "UsenetBlackhole", "Watch");
+            schema.Fields.First(v => v.Name == "NzbFolder").Value = GetTempDirectory("Download", "UsenetBlackhole", "Nzb");
 
             var result = DownloadClients.Post(schema);
 

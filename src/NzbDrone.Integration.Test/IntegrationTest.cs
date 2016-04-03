@@ -11,18 +11,9 @@ namespace NzbDrone.Integration.Test
     {
         private NzbDroneRunner _runner;
 
-        public string GetTestDirectory(params string[] args)
-        {
-            var path = Path.Combine(TestContext.CurrentContext.WorkDirectory, Path.Combine(args));
-
-            Directory.CreateDirectory(path);
-
-            return path;
-        }
-
         public override string SeriesRootFolder
         {
-            get { return GetTestDirectory("SeriesRootFolder") ; }
+            get { return GetTempDirectory("SeriesRootFolder") ; }
         }
 
         protected override string RootUrl

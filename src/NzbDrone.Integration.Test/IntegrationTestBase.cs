@@ -64,6 +64,8 @@ namespace NzbDrone.Integration.Test
             LogManager.Configuration.LoggingRules.Add(new LoggingRule("*", LogLevel.Trace, consoleTarget));
         }
 
+        public string TempDirectory { get; private set; }
+
         public abstract string SeriesRootFolder { get; }
 
         protected abstract string RootUrl { get; }
@@ -76,7 +78,7 @@ namespace NzbDrone.Integration.Test
 
         protected abstract void StopTestTarget();
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SmokeTestSetup()
         {
             StartTestTarget();
@@ -103,10 +105,16 @@ namespace NzbDrone.Integration.Test
             Series = new SeriesClient(RestClient, ApiKey);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void SmokeTestTearDown()
         {
             StopTestTarget();
+        }
+
+        [SetUp]
+        public void IntegrationSetUp()
+        {
+            TempDirectory = Path.Combine(TestContext.CurrentContext.TestDirectory, "_test_" + DateTime.UtcNow.Ticks);
         }
 
         [TearDown]
@@ -127,6 +135,15 @@ namespace NzbDrone.Integration.Test
                 _signalrConnection = null;
                 _signalRReceived = new List<SignalRMessage>();
             }
+        }
+
+        public string GetTempDirectory(params string[] args)
+        {
+            var path = Path.Combine(TempDirectory, Path.Combine(args));
+
+            Directory.CreateDirectory(path);
+
+            return path;
         }
 
         protected void ConnectSignalR()

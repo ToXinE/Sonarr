@@ -122,7 +122,6 @@
     <Compile Include="IndexHtmlFixture.cs" />
     <Compile Include="IntegrationTest.cs" />
     <Compile Include="IntegrationTestBase.cs" />
-    <Compile Include="IntegrationTestDirectoryInfo.cs" />
     <Compile Include="ApiTests\NamingConfigFixture.cs" />
     <Compile Include="ApiTests\NotificationFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
