@@ -32,7 +32,7 @@ namespace NzbDrone.Core.Test.IndexerTests.RarbgTests
         [Test]
         public void should_parse_recent_feed_from_Rarbg()
         {
-            var recentFeed = ReadAllText(@"Files/Indexers/Rarbg/RecentFeed_v2.json");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/Rarbg/RecentFeed_v2.json");
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))

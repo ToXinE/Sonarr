@@ -30,7 +30,7 @@ namespace NzbDrone.Core.Test.IndexerTests.HDBitsTests
         [Test]
         public void should_parse_recent_feed_from_HDBits()
         {
-            var responseJson = ReadAllText(@"Files/Indexers/HdBits/RecentFeed.json");
+            var responseJson = ReadAllTestFile(@"Files/Indexers/HdBits/RecentFeed.json");
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))

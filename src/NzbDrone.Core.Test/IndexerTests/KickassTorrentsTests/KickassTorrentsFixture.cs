@@ -29,7 +29,7 @@ namespace NzbDrone.Core.Test.IndexerTests.KickassTorrentsTests
         [Test]
         public void should_parse_recent_feed_from_KickassTorrents()
         {
-            var recentFeed = ReadAllText(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
@@ -73,7 +73,7 @@ namespace NzbDrone.Core.Test.IndexerTests.KickassTorrentsTests
         {
             ((KickassTorrentsSettings) Subject.Definition.Settings).VerifiedOnly = true;
 
-            var recentFeed = ReadAllText(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))
@@ -88,7 +88,7 @@ namespace NzbDrone.Core.Test.IndexerTests.KickassTorrentsTests
         public void should_set_seeders_to_null()
         {
             // Atm, Kickass supplies 0 as seeders and leechers on the rss feed (but not the site), so set it to null if there aren't any peers.
-            var recentFeed = ReadAllText(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
 
             recentFeed = recentFeed.Replace("<pubDate>Mon, 12 May 2014 16:16:49 +0000</pubDate>", string.Format("<pubDate>{0:R}</pubDate>", DateTime.UtcNow));
             recentFeed = Regex.Replace(recentFeed, @"(seeds|peers)\>\d*", "$1>0");
@@ -112,7 +112,7 @@ namespace NzbDrone.Core.Test.IndexerTests.KickassTorrentsTests
         public void should_not_set_seeders_to_null_if_has_peers()
         {
             // Atm, Kickass supplies 0 as seeders and leechers on the rss feed (but not the site), so set it to null if there aren't any peers.
-            var recentFeed = ReadAllText(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
 
             recentFeed = recentFeed.Replace("<pubDate>Mon, 12 May 2014 16:16:49 +0000</pubDate>", string.Format("<pubDate>{0:R}</pubDate>", DateTime.UtcNow));
             recentFeed = Regex.Replace(recentFeed, @"(seeds)\>\d*", "$1>0");
@@ -136,7 +136,7 @@ namespace NzbDrone.Core.Test.IndexerTests.KickassTorrentsTests
         public void should_not_set_seeders_to_null_if_older_than_12_hours()
         {
             // Atm, Kickass supplies 0 as seeders and leechers on the rss feed (but not the site), so set it to null if there aren't any peers.
-            var recentFeed = ReadAllText(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/KickassTorrents/KickassTorrents.xml");
 
             recentFeed = Regex.Replace(recentFeed, @"(seeds|peers)\>\d*", "$1>0");
 
@@ -159,7 +159,7 @@ namespace NzbDrone.Core.Test.IndexerTests.KickassTorrentsTests
         [Test]
         public void should_handle_xml_with_html_accents()
         {
-            var recentFeed = ReadAllText(@"Files/Indexers/KickassTorrents/KickassTorrents_accents.xml");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/KickassTorrents/KickassTorrents_accents.xml");
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.GET)))

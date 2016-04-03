@@ -149,6 +149,15 @@ namespace NzbDrone.Test.Common
             TestFolderInfo = Mocker.GetMock<IAppFolderInfo>().Object;
         }
 
+        protected string GetTestPath(string path)
+        {
+            return Path.Combine(TestContext.CurrentContext.TestDirectory, Path.Combine(path.Split('/')));
+        }
+        protected string ReadAllTestFile(string path)
+        {
+            return File.ReadAllText(GetTestPath(path));
+        }
+
         protected string GetTempFilePath()
         {
             return Path.Combine(TempFolder, Path.GetRandomFileName());

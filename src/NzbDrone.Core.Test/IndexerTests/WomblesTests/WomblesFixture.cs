@@ -33,7 +33,7 @@ namespace NzbDrone.Core.Test.IndexerTests.WomblesTests
 
         private void GivenRecentFeedResponse(string rssXmlFile)
         {
-            var recentFeed = ReadAllText(@"Files/Indexers/" + rssXmlFile);
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/" + rssXmlFile);
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.IsAny<HttpRequest>()))

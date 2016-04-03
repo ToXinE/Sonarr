@@ -28,7 +28,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
         [Test]
         public void should_parse_recent_feed_from_BroadcastheNet()
         {
-            var recentFeed = ReadAllText(@"Files/Indexers/BroadcastheNet/RecentFeed.json");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/BroadcastheNet/RecentFeed.json");
 
             Mocker.GetMock<IHttpClient>()
                 .Setup(o => o.Execute(It.Is<HttpRequest>(v => v.Method == HttpMethod.POST)))
@@ -131,7 +131,7 @@ namespace NzbDrone.Core.Test.IndexerTests.BroadcastheNetTests
         [Test]
         public void should_replace_https_http_as_needed()
         {
-            var recentFeed = ReadAllText(@"Files/Indexers/BroadcastheNet/RecentFeed.json");
+            var recentFeed = ReadAllTestFile(@"Files/Indexers/BroadcastheNet/RecentFeed.json");
 
             (Subject.Definition.Settings as BroadcastheNetSettings).BaseUrl = "http://api.btnapps.net/";
 
